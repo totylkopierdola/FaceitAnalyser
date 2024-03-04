@@ -4,6 +4,7 @@ const PlayerInfo = ({ playerData }) => {
   console.log(`PlayerInfo: playerData: ${playerData}`);
   return (
     <div>
+      xD
       <div className="grid grid-cols-1 md:grid-cols-2 place-items-center bg-[#3F4E4F] rounded-lg mt-6 md:mt-0 p-4 md:p-0 drop-shadow-boxes text-white">
         <h3>CS2</h3>
         <p>Region: {playerData.games?.cs2.region}</p>
