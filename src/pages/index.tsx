@@ -46,7 +46,7 @@ export default function Home() {
       const response = await axios.get(url, { params, headers });
       setPlayerdata(response.data);
       console.log("response.data", response.data);
-      // router.push(`/player-info/${playerName}`);
+      router.push(`/player-info/${playerName}`);
     } catch (error) {
       console.error("Error fetching player data:", error);
     }
@@ -54,18 +54,6 @@ export default function Home() {
 
   return (
     <div>
-      {/* NAVIGATION */}
-      <nav className="px-8 flex bg-gray-800 p-4 text-white mb-4">
-        <h1 className="text-3xl font-semibold w-1/4">
-          <a href="/">Faceit Analyser</a>
-        </h1>
-        <ul className="flex justify-end w-full items-center space-x-4 flex-column ml-4">
-          <li className="cursor-pointer">Home</li>
-          <li className="cursor-pointer">Players</li>
-          <li className="cursor-pointer">Teams</li>
-        </ul>
-      </nav>
-
       {/* SEARCH FORM */}
       <form onSubmit={handleSearch} name="search-form">
         <div className="flex items-start border-2 flex-col">
