@@ -16,6 +16,17 @@ export default function Document() {
         />
       </Head>
       <body className="h-full min-h-screen flex flex-col  ">
+        {/* NAVIGATION */}
+        <nav className="px-8 flex bg-gray-800 p-4 text-white mb-4">
+          <h1 className="text-3xl font-semibold w-1/4">
+            <a href="/">Faceit Analyser</a>
+          </h1>
+          <ul className="flex justify-end w-full items-center space-x-4 flex-column ml-4">
+            <li className="cursor-pointer">Home</li>
+            <li className="cursor-pointer">Players</li>
+            <li className="cursor-pointer">Teams</li>
+          </ul>
+        </nav>
         <Main />
         <NextScript />
       </body>
