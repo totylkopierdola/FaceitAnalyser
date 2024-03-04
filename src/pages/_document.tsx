@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <body>
+      <body className="h-full min-h-screen flex flex-col ">
         <Main />
         <NextScript />
       </body>
