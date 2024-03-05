@@ -41,15 +41,15 @@ const PlayerInfo = ({ playerData }) => {
     }
   };
 
-  const getPlayerStats = async () => {
-    try {
-      // expected url:"https://open.faceit.com/data/v4/players/38024357-cdd4-460e-bb03-b3fcfa6575ed"
+  const getPlayerStats = async () => {};
 
-      const response = await axios.get(`${url}/${playerInfo?.player_id}`, {
-        headers,
-      });
-      setPlayerStats(response.data); // Set playerStats state with response data
-      console.log("playerStats:::", playerStats);
+  const xd = async () => {
+    try {
+      const response = await axios.get(
+        "https://open.faceit.com/data/v4/players/shorstky/games/cs2/stats?offset=0&limit=20",
+        { headers }
+      );
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching player stats:", error);
     }
@@ -57,7 +57,12 @@ const PlayerInfo = ({ playerData }) => {
 
   return (
     <div className="flex items-center flex-col w-full  border-2 border-green-600 ">
-      <button onClick={() => getPlayerStats()}>xd</button>
+      <button onClick={() => xd()}>xd</button>
+      <iframe
+        src="https://widgets.faceit.com/organizer/12c3c3c2-5246-4fd6-a3ea-f4ed0e8d5186#apiKey=8a226311-e57e-4226-ab44-4d497fe6dd51"
+        style={{ width: "472px", height: "118px" }}
+      ></iframe>
+
       <h2>{playerInfo.nickname}</h2>
       <h4>player stats</h4>
       <button
