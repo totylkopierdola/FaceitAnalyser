@@ -3,54 +3,53 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-// import PlayerInfo from "./player-info/[nickname]";
+
+// prepare redux
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPlayerData } from "../redux/features/slice";
+import { setPlayerData } from "../redux/features/slice";
 
 import { API_TOKEN } from "../pages/utils/config";
 
 export default function Home() {
-  const [playerName, setPlayerName] = useState("");
-  const [playerData, setPlayerdata] = useState(null);
   const router = useRouter();
 
   const handleInputChange = (event) => {
     const inputValue = event.target.value;
-    setPlayerName(inputValue);
   };
 
   const handleSearch = (event) => {
     event.preventDefault();
-    console.log("Searching for player:", playerName);
-    fetchPlayer();
+    // fetchPlayer();
   };
 
-  const url = `https://open.faceit.com/data/v4/search/players?nickname=${playerName}&game=cs2&offset=0&limit=20`;
+  // const url = `https://open.faceit.com/data/v4/search/players?nickname=${playerName}&game=cs2&offset=0&limit=20`;
 
-  // Define the headers, including the authorization token
-  const headers = {
-    accept: "application/json",
-    Authorization: `Bearer ${API_TOKEN}`,
-  };
+  // const headers = {
+  //   accept: "application/json",
+  //   Authorization: `Bearer ${API_TOKEN}`,
+  // };
 
-  const fetchPlayer = async () => {
-    if (playerName.length === 0) {
-      return;
-    }
-    const params = {
-      nickname: playerName,
-      game: "cs2",
-      offset: 0,
-      limit: 20,
-    };
+  // const fetchPlayer = async () => {
+  //   if (playerName.length === 0) {
+  //     return;
+  //   }
+  //   const params = {
+  //     nickname: playerName,
+  //     game: "cs2",
+  //     offset: 0,
+  //     limit: 20,
+  //   };
 
-    try {
-      const response = await axios.get(url, { params, headers });
-      setPlayerdata(response.data);
-      console.log("response.data", response.data);
-      router.push(`/player-info/${playerName}`);
-    } catch (error) {
-      console.error("Error fetching player data:", error);
-    }
-  };
+  //   try {
+  //     const response = await axios.get(url, { params, headers });
+  //     setPlayerdata(response.data);
+  //     console.log("response.data", response.data);
+  //     router.push(`/player-info/${playerName}`);
+  //   } catch (error) {
+  //     console.error("Error fetching player data:", error);
+  //   }
+  // };
 
   return (
     <div>
@@ -61,7 +60,6 @@ export default function Home() {
             <input
               type="text"
               placeholder="Enter player name"
-              value={playerName}
               onChange={handleInputChange}
               className="px-4 py-2 border border-gray-300 rounded mr-2 focus:outline-none focus:border-blue-500"
             />
@@ -73,7 +71,7 @@ export default function Home() {
             </button>
           </div>
           <div className="results mt-2">
-            {playerData &&
+            {/* {playerData &&
               playerData.items.map((player, index) => (
                 <div
                   className=" flex align-center items-center border border-black rounded-md px-2 cursor-pointer hover:bg-gray-200 transition-all ease-in-out duration-300 mt-2"
@@ -100,7 +98,7 @@ export default function Home() {
                   </span>
                   <span>{player.verified}</span>
                 </div>
-              ))}
+              ))} */}
           </div>
         </div>
       </form>
