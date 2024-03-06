@@ -15,7 +15,7 @@ export default function Document() {
           rel="stylesheet"
         />
       </Head>
-      <body className="h-full min-h-screen flex flex-col  ">
+      <body className="h-full min-h-screen flex flex-col  bg-slate-600">
         {/* NAVIGATION */}
         <nav className="px-8 flex bg-gray-800 p-4 text-white mb-4">
           <h1 className="text-3xl font-semibold w-1/4">
