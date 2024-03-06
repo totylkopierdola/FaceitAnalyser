@@ -1,4 +1,4 @@
-import React from "react";
+import Image from "next/image";
 
 const PlayerInfo = ({ playerData }) => {
   console.log(`PlayerInfo: playerData: ${playerData}`);
@@ -14,7 +14,12 @@ const PlayerInfo = ({ playerData }) => {
       <hr />
       <div>
         <h1>{playerData.nickname}'s Statistics</h1>
-        <img src={playerData.avatar} alt={playerData.nickname} />
+        <img
+          width="16px"
+          height="16px"
+          src={playerData.avatar}
+          alt={playerData.nickname}
+        />
         <p>Country: {playerData.country}</p>
         <p>Steam ID: {playerData.platforms?.steam}</p>
         <h2>Games</h2>
