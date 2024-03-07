@@ -51,8 +51,6 @@ export const PlayerDataProvider = ({ children }) => {
   };
 
   const getPlayerData = async (nickname) => {
-    // 'https://open.faceit.com/data/v4/players?nickname=shorstky&game=cs2'
-
     try {
       const response = await axios.get(
         `https://open.faceit.com/data/v4/players?nickname=${nickname}&game=cs2`,
@@ -76,8 +74,6 @@ export const PlayerDataProvider = ({ children }) => {
     }
   };
 
-  // Retrieve statistics of a player for a given amount of matches
-  //   'https://open.faceit.com/data/v4/players/38024357-cdd4-460e-bb03-b3fcfa6575ed/games/cs2/stats?offset=0&limit=20' \
   const getPlayerLatestMatches = async (playerId, limit) => {
     try {
       const response = await axios.get(
