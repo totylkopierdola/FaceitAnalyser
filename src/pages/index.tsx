@@ -1,66 +1,40 @@
-/* eslint-disable @next/next/no-img-element */
-// pages/index.js
-
-import axios from "axios";
-import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
-import { API_TOKEN } from "../pages/utils/config";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { usePlayerData } from "./hooks/PlayerDataContext";
 
-export default function Home() {
-  const dispatch = useDispatch();
+const Home = () => {
   const router = useRouter();
-
-  const [inputNickname, setInputNickname] = useState("");
-
-  const playerData = useSelector((state) => state.playerData);
-
-  const playerName = useSelector((state) => state.playerName);
+  const { getSearchForPlayers, playerData } = usePlayerData();
+  const [inputNickname, setInputNickname] = useState("shorstky");
 
   const handleInputChange = (event) => {
-    const inputValue = event.target.value;
-    setInputNickname(inputValue);
-    // fetchPlayerDetails();
+    setInputNickname(event.target.value);
   };
 
   const handleSearch = (event) => {
     event.preventDefault();
-    fetchPlayerDetails();
-  };
-
-  // RETRIEVE PLAYER DETAILS
-  const fetchPlayerDetails = async () => {
-    console.log("inputNickname", inputNickname);
-    try {
-      const response = await axios.get(
-        `https://open.faceit.com/data/v4/search/players?nickname=${inputNickname}&offset=0&limit=20`,
-        {
-          headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-        }
-      );
-      console.log("Player details:", response.data);
-      dispatch({
-        type: "SET_PLAYER_DATA",
-        payload: response.data,
-      });
-      dispatch({
-        type: "SET_PLAYER_NAME",
-        payload: response.data.nickname,
-      });
-    } catch (error) {
-      console.error("Error fetching player details:", error);
-    }
+    getSearchForPlayers(inputNickname);
   };
 
   return (
     <div>
-      <h1 onClick={() => console.log("playerName", playerName)}>
+      <button
+        className="button border-red-500 border"
+        onClick={() => {
+          console.log(
+            "playerData.allPlayersDetails",
+            playerData.allPlayersDetails
+          );
+          // console.log("playerData.info", playerData.info);
+          // console.log("playerData.info.items", playerData.info.items);
+          // console.log("playerData.info.length", playerData.info.length);
+        }}
+      >
+        playerData
+      </button>
+      {/* <h1 onClick={() => console.log("playerName", playerName)}>
         {playerName}
-      </h1>
+      </h1> */}
       {/* SEARCH FORM */}
       <form onSubmit={handleSearch} name="search-form">
         <div className="flex items-start border-2 flex-col">
@@ -81,8 +55,8 @@ export default function Home() {
           </div>
           {/* RESULTS */}
           <div className="results mt-2">
-            {playerData.items &&
-              playerData.items.map((player, index) => (
+            {playerData.info.items &&
+              playerData.info.items.map((player, index) => (
                 <div
                   className="bg-red-500 flex align-center items-center border border-black rounded-md px-2 cursor-pointer hover:bg-gray-200 transition-all ease-in-out duration-300 mt-2"
                   key={index}
@@ -118,4 +92,6 @@ export default function Home() {
       </form>
     </div>
   );
-}
+};
+
+export default Home;
