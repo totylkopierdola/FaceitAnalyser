@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -9,12 +10,18 @@ function classNames(...classes) {
 }
 
 const Navbar = () => {
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    setAnimate(true);
+  }, []);
   return (
     <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-50">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 items-center justify-between">
+            <div className="flex h-16 items-center justify-between ">
+              <div className="absolute left-0 bottom-0 w-full h-[1px] rounded-full animate-pulse transition-transform transform origin-left opacity-5 bg-white"></div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <h2 className="font-bold text-2xl text-gray-50">
