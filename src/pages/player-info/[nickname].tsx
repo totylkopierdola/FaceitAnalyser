@@ -40,7 +40,7 @@ const PlayerInfo = () => {
           staty
         </button>
 
-        <div className="flex justify-between w-1/2">
+        <div className="flex justify-between">
           <div className="profile-left ">
             <div className="flex">
               <img
@@ -97,7 +97,7 @@ const PlayerInfo = () => {
         >
           xD
         </p>
-        {playerData.latestMatches.items &&
+        {playerData.latestMatches?.items &&
           playerData.latestMatches.items.map((match, matchIndex) => (
             <div key={matchIndex} className="w-full mt-12">
               <p className="text-xl pb-3 flex items-center">
