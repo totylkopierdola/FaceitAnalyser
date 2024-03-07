@@ -25,11 +25,6 @@ export const PlayerDataProvider = ({ children }) => {
           },
         }
       );
-      setPlayerData((prevData) => ({
-        ...prevData,
-        searchPlayerList: response.data,
-      }));
-      console.log("searchPlayerList", response.data);
 
       const playerId = response.data.player_id;
       const statsResponse = await axios.get(
@@ -43,6 +38,7 @@ export const PlayerDataProvider = ({ children }) => {
       );
 
       setPlayerData({
+        searchPlayerList: response.data,
         info: response.data,
         stats: statsResponse.data,
         id: playerId,
@@ -53,8 +49,32 @@ export const PlayerDataProvider = ({ children }) => {
     }
   };
 
+  const getPlayerData = async (nickname) => {
+    // 'https://open.faceit.com/data/v4/players?nickname=shorstky&game=cs2'
+
+    try {
+      const response = await axios.get(
+        `https://open.faceit.com/data/v4/players?nickname=${nickname}&game=cs2`,
+        {
+          headers: {
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        }
+      );
+
+      setPlayerData(
+        (prevData) => ({ ...prevData, info: response.data }),
+        console.log("getPlayerData response", response.data)
+      );
+    } catch (error) {
+      console.error("getPlayerData error", error);
+    }
+  };
+
   return (
-    <PlayerDataContext.Provider value={{ playerData, getSearchForPlayers }}>
+    <PlayerDataContext.Provider
+      value={{ playerData, getSearchForPlayers, getPlayerData }}
+    >
       {children}
     </PlayerDataContext.Provider>
   );

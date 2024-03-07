@@ -18,20 +18,6 @@ const Home = () => {
 
   return (
     <div>
-      <button
-        className="button border-red-500 border"
-        onClick={() => {
-          console.log(
-            "playerData.allPlayersDetails",
-            playerData.allPlayersDetails
-          );
-          // console.log("playerData.info", playerData.info);
-          // console.log("playerData.info.items", playerData.info.items);
-          // console.log("playerData.info.length", playerData.info.length);
-        }}
-      >
-        playerData
-      </button>
       {/* <h1 onClick={() => console.log("playerName", playerName)}>
         {playerName}
       </h1> */}
