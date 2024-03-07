@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { usePlayerData } from "../hooks/PlayerDataContext";
@@ -135,12 +136,12 @@ const PlayerInfo = () => {
               </div>
               <p className="pt-3 text-gray-600">
                 Source:{" "}
-                <a
+                <Link
                   className="underline"
                   href="https://tailwindcomponents.com/component/table-responsive-with-filters"
                 >
                   https://tailwindcomponents.com/component/table-responsive-with-filters
-                </a>
+                </Link>
               </p>
             </div>
           ))}
