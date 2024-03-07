@@ -22,7 +22,7 @@ export default function Home() {
   const handleInputChange = (event) => {
     const inputValue = event.target.value;
     setInputNickname(inputValue);
-    fetchPlayerDetails();
+    // fetchPlayerDetails();
   };
 
   const handleSearch = (event) => {
@@ -84,10 +84,10 @@ export default function Home() {
             {playerData.items &&
               playerData.items.map((player, index) => (
                 <div
-                  className="flex align-center items-center border border-black rounded-md px-2 cursor-pointer hover:bg-gray-200 transition-all ease-in-out duration-300 mt-2"
+                  className="bg-red-500 flex align-center items-center border border-black rounded-md px-2 cursor-pointer hover:bg-gray-200 transition-all ease-in-out duration-300 mt-2"
                   key={index}
                   onClick={() => {
-                    router.push(`/players/${player.nickname}`);
+                    router.push(`/player-info/${player.nickname}`);
                   }}
                 >
                   <img

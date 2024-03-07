@@ -5,6 +5,7 @@ import axios from "axios";
 const initialState = {
   playerName: "",
   playerData: {},
+  playerId: "",
 };
 
 function reducer(state = initialState, action) {
@@ -18,6 +19,12 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         playerName: action.payload,
+      };
+
+    case "SET_PLAYER_ID":
+      return {
+        ...state,
+        playerId: action.payload,
       };
     default:
       return state;
