@@ -87,20 +87,61 @@ const PlayerInfo = () => {
         </div>
       </div>
       <div className="container border-yellow-500 border flex flex-col">
+        <p
+          onClick={() =>
+            console.log(
+              "playerData.latestMatches.items",
+              playerData.latestMatches.items
+            )
+          }
+        >
+          xD
+        </p>
         {playerData.latestMatches.items &&
-          playerData.latestMatches.items.map((match, index) => (
-            <div key={index} className="flex flex-col  my-4 rounded-full">
-              <h2>MATCH {index + 1}:</h2>
-              {Object.entries(match.stats).map(([statName, statValue]) => (
-                <div key={statName} className="flex w-full ">
-                  <p className="font-bold w-40 px-4 bg-gray-400 ">
-                    {statName}:
-                  </p>{" "}
-                  <div className="px-2 w-full whitespace-nowrap bg-green-50">
-                    {statValue}
-                  </div>
-                </div>
-              ))}
+          playerData.latestMatches.items.map((match, matchIndex) => (
+            <div key={matchIndex} className="w-full mt-12">
+              <p className="text-xl pb-3 flex items-center">
+                <i className="fas fa-list mr-3"></i> Table Example
+              </p>
+              <div className="bg-white overflow-auto">
+                <table className="min-w-full leading-normal">
+                  <thead>
+                    <tr>
+                      {/* Map through the keys of stats object to generate table headers */}
+                      {Object.keys(match.stats).map((key, index) => (
+                        <th
+                          key={index}
+                          className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                        >
+                          {key}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      {/* Map through the values of stats object to generate table data */}
+                      {Object.values(match.stats).map((value, index) => (
+                        <td
+                          key={index}
+                          className="px-5 py-5 border-b border-gray-200 bg-white text-sm"
+                        >
+                          {value}
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="pt-3 text-gray-600">
+                Source:{" "}
+                <a
+                  className="underline"
+                  href="https://tailwindcomponents.com/component/table-responsive-with-filters"
+                >
+                  https://tailwindcomponents.com/component/table-responsive-with-filters
+                </a>
+              </p>
             </div>
           ))}
       </div>
