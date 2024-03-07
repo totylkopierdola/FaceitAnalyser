@@ -10,6 +10,7 @@ export const PlayerDataProvider = ({ children }) => {
   const [playerData, setPlayerData] = useState({
     searchPlayerList: [],
     info: [],
+    latestMatches: [],
     stats: [],
     id: "",
     error: null,
@@ -63,7 +64,11 @@ export const PlayerDataProvider = ({ children }) => {
       );
 
       setPlayerData(
-        (prevData) => ({ ...prevData, info: response.data }),
+        (prevData) => ({
+          ...prevData,
+          info: response.data,
+          id: response.data.player_id,
+        }),
         console.log("getPlayerData response", response.data)
       );
     } catch (error) {
@@ -71,9 +76,37 @@ export const PlayerDataProvider = ({ children }) => {
     }
   };
 
+  // Retrieve statistics of a player for a given amount of matches
+  //   'https://open.faceit.com/data/v4/players/38024357-cdd4-460e-bb03-b3fcfa6575ed/games/cs2/stats?offset=0&limit=20' \
+  const getPlayerLatestMatches = async (playerId, limit) => {
+    try {
+      const response = await axios.get(
+        `https://open.faceit.com/data/v4/players/${playerId}/games/cs2/stats?offset=0&limit=${limit}`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        }
+      );
+
+      setPlayerData((prevData) => ({
+        ...prevData,
+        latestMatches: response.data,
+      }));
+    } catch (error) {
+      setPlayerData((prevData) => ({ ...prevData, error: error.message }));
+    }
+  };
+
   return (
     <PlayerDataContext.Provider
-      value={{ playerData, getSearchForPlayers, getPlayerData }}
+      value={{
+        playerData,
+        getSearchForPlayers,
+        getPlayerData,
+        getPlayerLatestMatches,
+      }}
     >
       {children}
     </PlayerDataContext.Provider>
