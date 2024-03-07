@@ -1,68 +1,17 @@
+import { useEffect } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { API_TOKEN } from "../utils/config";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-
-console.clear();
+import { usePlayerData } from "../hooks/PlayerDataContext";
 
 const PlayerInfo = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
-
   const { nickname } = router.query;
-  const playerData = useSelector((state) => state.playerData);
-
-  const [playerInfo, setPlayerInfo] = useState([]);
-  const [playerStats, setPlayerStats] = useState([]);
-  const [playerId, setPlayerId] = useState("");
-
-  const fetchPlayerInfo = async () => {
-    try {
-      const response = await axios.get(
-        `https://open.faceit.com/data/v4/players?nickname=${nickname}`,
-        {
-          headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-        }
-      );
-      console.log("Player details:", response.data);
-      setPlayerInfo(response.data);
-      setPlayerId(response.data.player_id);
-    } catch (error) {
-      console.error("Error fetching player details:", error);
-    }
-  };
-
-  const fetchPlayerStats = async () => {
-    try {
-      const response = await axios.get(
-        `https://open.faceit.com/data/v4/players/${playerId}/games/cs2/stats?offset=0&limit=20`,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-        }
-      );
-      console.log("Player stats:", response.data);
-      setPlayerStats(response.data);
-    } catch (error) {
-      console.error("Error fetching player stats:", error);
-    }
-  };
+  const { playerData, fetchPlayerData } = usePlayerData();
 
   useEffect(() => {
     if (nickname !== undefined) {
-      fetchPlayerInfo();
+      fetchPlayerData(nickname);
     }
-    if (playerId !== "") {
-      fetchPlayerStats();
-    }
-  }, [playerData, nickname, playerId]);
+  }, [nickname]);
 
   return (
     <div className="w-full border flex flex-col container items-center">
