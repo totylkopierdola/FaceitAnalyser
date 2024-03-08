@@ -12,6 +12,7 @@ export const PlayerDataProvider = ({ children }) => {
     info: [],
     latestMatches: [],
     stats: [],
+    fullTimeStats: [],
     id: "",
     error: null,
   });
@@ -61,14 +62,11 @@ export const PlayerDataProvider = ({ children }) => {
         }
       );
 
-      setPlayerData(
-        (prevData) => ({
-          ...prevData,
-          info: response.data,
-          id: response.data.player_id,
-        }),
-        console.log("fetchPlayerData response", response.data)
-      );
+      setPlayerData((prevData) => ({
+        ...prevData,
+        info: response.data,
+        id: response.data.player_id,
+      }));
     } catch (error) {
       console.error("fetchPlayerData error", error);
     }
@@ -76,6 +74,7 @@ export const PlayerDataProvider = ({ children }) => {
 
   const fetchPlayerLatestMatches = async (playerId, limit) => {
     try {
+      if (!playerId) return null;
       const response = await axios.get(
         `https://open.faceit.com/data/v4/players/${playerId}/games/cs2/stats?offset=0&limit=${limit}`,
         {
@@ -95,6 +94,28 @@ export const PlayerDataProvider = ({ children }) => {
     }
   };
 
+  const fetchPlayerFulltimeStats = async (playerId) => {
+    try {
+      if (!playerId) return null;
+      const response = await axios.get(
+        `https://open.faceit.com/data/v4/players/${playerId}/stats/cs2`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        }
+      );
+
+      setPlayerData((prevData) => ({
+        ...prevData,
+        fullTimeStats: response.data,
+      }));
+    } catch (error) {
+      setPlayerData((prevData) => ({ ...prevData, error: error.message }));
+    }
+  };
+
   return (
     <PlayerDataContext.Provider
       value={{
@@ -102,6 +123,7 @@ export const PlayerDataProvider = ({ children }) => {
         fetchSearchForPlayers,
         fetchPlayerData,
         fetchPlayerLatestMatches,
+        fetchPlayerFulltimeStats,
       }}
     >
       {children}
