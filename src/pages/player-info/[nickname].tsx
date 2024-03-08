@@ -1,18 +1,25 @@
+import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { usePlayerData } from "../hooks/PlayerDataContext";
+import Image from "next/image";
 
 const PlayerInfo = () => {
   const router = useRouter();
   const { nickname } = router.query;
-  const { playerData, getPlayerData, getPlayerLatestMatches } = usePlayerData();
+  const { playerData, fetchPlayerData, fetchPlayerLatestMatches } =
+    usePlayerData();
 
   useEffect(() => {
     if (nickname !== undefined) {
-      getPlayerData(nickname);
-      getPlayerLatestMatches(playerData.id, 2);
+      fetchPlayerData(nickname);
+      fetchPlayerLatestMatches(playerData.id, 20);
     }
   }, [nickname, playerData.id]);
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(" ");
+  }
 
   return (
     <div className="w-full border flex flex-col container items-center">
@@ -43,11 +50,16 @@ const PlayerInfo = () => {
         <div className="flex justify-between">
           <div className="profile-left ">
             <div className="flex">
-              <img
+              <Image
                 className="rounded-full border-none"
                 width={100}
                 height={100}
-                src={playerData?.info.avatar}
+                priority={true}
+                src={
+                  playerData.info.avatar
+                    ? playerData?.info.avatar
+                    : "/images/noavatar.png"
+                }
                 alt=""
               />
               <div className="flex flex-col justify-center items-start ml-4">
@@ -94,56 +106,101 @@ const PlayerInfo = () => {
               playerData.latestMatches.items
             )
           }
-        >
-          xD
-        </p>
-        {playerData.latestMatches?.items &&
-          playerData.latestMatches.items.map((match, matchIndex) => (
-            <div key={matchIndex} className="w-full mt-12">
-              <p className="text-xl pb-3 flex items-center">
-                <i className="fas fa-list mr-3"></i> Table Example
-              </p>
-              <div className="bg-white overflow-auto">
-                <table className="min-w-full leading-normal">
-                  <thead>
-                    <tr>
-                      {/* Map through the keys of stats object to generate table headers */}
-                      {Object.keys(match.stats).map((key, index) => (
-                        <th
-                          key={index}
-                          className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                        >
-                          {key}
-                        </th>
-                      ))}
+        ></p>
+
+        {playerData.latestMatches?.items && (
+          <div className="w-full mt-12">
+            <div className="overflow-auto">
+              <table className="w-full whitespace-nowrap text-left bg-gray-900 py-10">
+                <colgroup>
+                  <col className="w-full sm:w-4/12" />
+                  <col className="lg:w-4/12" />
+                  <col className="lg:w-2/12" />
+                  <col className="lg:w-1/12" />
+                  <col className="lg:w-1/12" />
+                </colgroup>
+                <thead className="border-b border-white/10 text-sm leading-6 text-white">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8"
+                    >
+                      TEAM 👑
+                    </th>
+                    <th
+                      scope="col"
+                      className="hidden py-2 pl-0 pr-8 font-semibold sm:table-cell"
+                    >
+                      Score 📝
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20"
+                    >
+                      Kills 🎯
+                    </th>
+                    <th
+                      scope="col"
+                      className="hidden py-2 pl-0 pr-8 font-semibold md:table-cell lg:pr-20"
+                    >
+                      Assists ❇️
+                    </th>
+                    <th
+                      scope="col"
+                      className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8"
+                    >
+                      Deaths ☠️
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {playerData.latestMatches.items.map((match, matchIndex) => (
+                    <tr key={matchIndex}>
+                      <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
+                        <div className="flex items-center ">
+                          {match.stats.Result === "1" ? (
+                            <div className="ml-[-22px]  relative mr-2 text-green-400 bg-green-400/10 flex-none rounded-full p-1 w-3.5 h-3.5">
+                              <div className="h-1.5 w-1.5 rounded-full bg-current"></div>
+                            </div>
+                          ) : (
+                            <div className="ml-[-22px]  relative mr-2 text-red-400 bg-green-400/10 flex-none rounded-full p-1 w-3.5 h-3.5">
+                              <div className="h-1.5 w-1.5 rounded-full bg-current"></div>
+                            </div>
+                          )}
+                          <div className="truncate text-sm leading-6 text-white font-extrabold">
+                            {match.stats.Team}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">
+                        <div className="flex">
+                          <div
+                            className={`${
+                              match.stats.Result === "1"
+                                ? "bg-green-500/70"
+                                : "bg-red-500"
+                            } rounded-md min-w-[55px] text-center  px-2 py-1 text-xs text-black font-medium ring-1 ring-inset ring-white/10`}
+                          >
+                            {match.stats.Score}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="relative hidden py-4 pl-0 pr-8 text-sm leading-6 text-green-400 md:table-cell lg:pr-20">
+                        {match.stats.Kills}
+                      </td>
+                      <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-yellow-400 md:table-cell lg:pr-20">
+                        {match.stats.Assists}
+                      </td>
+                      <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-red-400 md:table-cell lg:pr-20">
+                        {match.stats.Deaths}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      {/* Map through the values of stats object to generate table data */}
-                      {Object.values(match.stats).map((value, index) => (
-                        <td
-                          key={index}
-                          className="px-5 py-5 border-b border-gray-200 bg-white text-sm"
-                        >
-                          {value}
-                        </td>
-                      ))}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="pt-3 text-gray-600">
-                Source:{" "}
-                <a
-                  className="underline"
-                  href="https://tailwindcomponents.com/component/table-responsive-with-filters"
-                >
-                  https://tailwindcomponents.com/component/table-responsive-with-filters
-                </a>
-              </p>
+                  ))}
+                </tbody>
+              </table>{" "}
             </div>
-          ))}
+          </div>
+        )}
       </div>
     </div>
   );
