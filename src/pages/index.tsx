@@ -12,7 +12,7 @@ import { usePlayerData } from "./hooks/PlayerDataContext";
 const Home = () => {
   const router = useRouter();
 
-  const { getSearchForPlayers, playerData } = usePlayerData();
+  const { fetchSearchForPlayers, playerData } = usePlayerData();
   const [inputNickname, setInputNickname] = useState("shorstky");
   const [isShowing, setIsShowing] = useState(false);
   const [enterPage, setEnterPage] = useState(false);
@@ -24,7 +24,7 @@ const Home = () => {
 
   const handleSearch = (event) => {
     event.preventDefault();
-    getSearchForPlayers(inputNickname);
+    fetchSearchForPlayers(inputNickname);
     setIsShowing(false);
     setTimeout(() => {
       setIsShowing(true);

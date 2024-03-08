@@ -6,13 +6,13 @@ import { usePlayerData } from "../hooks/PlayerDataContext";
 const PlayerInfo = () => {
   const router = useRouter();
   const { nickname } = router.query;
-  const { playerData, getPlayerData, getPlayerLatestMatches } = usePlayerData();
+  const { playerData, fetchPlayerData, fetchPlayerLatestMatches } =
+    usePlayerData();
 
   useEffect(() => {
     if (nickname !== undefined) {
-      getPlayerData(nickname);
-      // second parameter should be playerData.latestMatches number of items
-      getPlayerLatestMatches(playerData.id, playerData.latestMatches.length);
+      fetchPlayerData(nickname);
+      fetchPlayerLatestMatches(playerData.id, 20);
     }
   }, [nickname, playerData.id]);
 

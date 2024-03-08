@@ -16,7 +16,7 @@ export const PlayerDataProvider = ({ children }) => {
     error: null,
   });
 
-  const getSearchForPlayers = async (nickname) => {
+  const fetchSearchForPlayers = async (nickname) => {
     try {
       const response = await axios.get(
         `https://open.faceit.com/data/v4/search/players?nickname=${nickname}&offset=0&limit=20`,
@@ -50,7 +50,7 @@ export const PlayerDataProvider = ({ children }) => {
     }
   };
 
-  const getPlayerData = async (nickname) => {
+  const fetchPlayerData = async (nickname) => {
     try {
       const response = await axios.get(
         `https://open.faceit.com/data/v4/players?nickname=${nickname}&game=cs2`,
@@ -67,14 +67,14 @@ export const PlayerDataProvider = ({ children }) => {
           info: response.data,
           id: response.data.player_id,
         }),
-        console.log("getPlayerData response", response.data)
+        console.log("fetchPlayerData response", response.data)
       );
     } catch (error) {
-      console.error("getPlayerData error", error);
+      console.error("fetchPlayerData error", error);
     }
   };
 
-  const getPlayerLatestMatches = async (playerId, limit) => {
+  const fetchPlayerLatestMatches = async (playerId, limit) => {
     try {
       const response = await axios.get(
         `https://open.faceit.com/data/v4/players/${playerId}/games/cs2/stats?offset=0&limit=${limit}`,
@@ -99,9 +99,9 @@ export const PlayerDataProvider = ({ children }) => {
     <PlayerDataContext.Provider
       value={{
         playerData,
-        getSearchForPlayers,
-        getPlayerData,
-        getPlayerLatestMatches,
+        fetchSearchForPlayers,
+        fetchPlayerData,
+        fetchPlayerLatestMatches,
       }}
     >
       {children}
