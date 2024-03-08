@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { usePlayerData } from "../hooks/PlayerDataContext";
+import Image from "next/image";
 
 const PlayerInfo = () => {
   const router = useRouter();
@@ -49,11 +50,16 @@ const PlayerInfo = () => {
         <div className="flex justify-between">
           <div className="profile-left ">
             <div className="flex">
-              <img
+              <Image
                 className="rounded-full border-none"
                 width={100}
                 height={100}
-                src={playerData?.info.avatar}
+                priority={true}
+                src={
+                  playerData.info.avatar
+                    ? playerData?.info.avatar
+                    : "/images/noavatar.png"
+                }
                 alt=""
               />
               <div className="flex flex-col justify-center items-start ml-4">
@@ -153,12 +159,12 @@ const PlayerInfo = () => {
                       <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
                         <div className="flex items-center ">
                           {match.stats.Result === "1" ? (
-                            <div class="ml-[-22px]  relative mr-2 text-green-400 bg-green-400/10 flex-none rounded-full p-1 w-3.5 h-3.5">
-                              <div class="h-1.5 w-1.5 rounded-full bg-current"></div>
+                            <div className="ml-[-22px]  relative mr-2 text-green-400 bg-green-400/10 flex-none rounded-full p-1 w-3.5 h-3.5">
+                              <div className="h-1.5 w-1.5 rounded-full bg-current"></div>
                             </div>
                           ) : (
-                            <div class="ml-[-22px]  relative mr-2 text-red-400 bg-green-400/10 flex-none rounded-full p-1 w-3.5 h-3.5">
-                              <div class="h-1.5 w-1.5 rounded-full bg-current"></div>
+                            <div className="ml-[-22px]  relative mr-2 text-red-400 bg-green-400/10 flex-none rounded-full p-1 w-3.5 h-3.5">
+                              <div className="h-1.5 w-1.5 rounded-full bg-current"></div>
                             </div>
                           )}
                           <div className="truncate text-sm leading-6 text-white font-extrabold">

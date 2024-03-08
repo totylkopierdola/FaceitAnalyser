@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const statuses = {
   Completed: "text-green-400 bg-green-400/10",
   Error: "text-rose-400 bg-rose-400/10",
@@ -166,10 +168,12 @@ export default function Example() {
             <tr key={item.commit}>
               <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
                 <div className="flex items-center gap-x-4">
-                  <img
+                  <Image
                     src={item.user.imageUrl}
                     alt=""
                     className="h-8 w-8 rounded-full bg-gray-800"
+                    width={32}
+                    height={32}
                   />
                   <div className="truncate text-sm font-medium leading-6 text-white">
                     {item.user.name}
