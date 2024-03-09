@@ -30,4 +30,25 @@ const formatDate = (timestamp) => {
   }
 };
 
-export { formatDate };
+const countTimePostMatch = (matchDate) => {
+  const matchDateObj = new Date(matchDate);
+  const currentDate = new Date();
+
+  const differenceMs = currentDate - matchDateObj;
+  const differenceHours = Math.round(differenceMs / (1000 * 60 * 60));
+
+  if (differenceHours < 24) {
+    return `${differenceHours} hours ago`;
+  } else if (differenceHours >= 24 && differenceHours < 48) {
+    return `1 day ago`;
+  } else {
+    const days = Math.floor(differenceHours / 24);
+    return `${days} days ago`;
+  }
+};
+
+const classNames = (...classes) => {
+  return classes.filter(Boolean).join(" ");
+};
+
+export { formatDate, countTimePostMatch, classNames };

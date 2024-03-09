@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { usePlayerData } from "../hooks/PlayerDataContext";
 import Image from "next/image";
 import BackgroundShapes from "../../components/BackgroundShapes";
-import { formatDate } from "../utils/helpers";
+import { formatDate, countTimePostMatch, classNames } from "../utils/helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const PlayerInfo = () => {
@@ -31,12 +31,19 @@ const PlayerInfo = () => {
     console.log("zxc", playerData);
   }, [nickname, playerData.id]);
 
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
+  const calculateEloChange = (currentMatch, previousMatch) => {
+    if (!previousMatch) {
+      return 0;
+    }
+
+    return currentMatch.stats.Elo - previousMatch.stats.Elo;
+  };
 
   return (
     <div className="relative isolate overflow-hidden bg-gray-900 pt-10">
+      <button onClick={() => console.log("::::::::", playerData)}>
+        playerData
+      </button>
       <BackgroundShapes color="bg-red-500" opacity="opacity-20" />
       <div className="">
         <div className="mx-auto max-w-2xl text-center">
@@ -51,18 +58,20 @@ const PlayerInfo = () => {
           >
             {/* player-details */}
             <li className="player-details rounded-2xl bg-gray-800 px-8 py-10 opacity-80 transition-opacity duration-300  hover:opacity-100">
-              <Image
-                className="mx-auto rounded-full "
-                width={100}
-                height={100}
-                priority={true}
-                src={
-                  playerData.info.avatar
-                    ? playerData?.info.avatar
-                    : "/images/noavatar.png"
-                }
-                alt=""
-              />
+              <div>
+                <Image
+                  className="mx-auto rounded-full relative"
+                  width={100}
+                  height={100}
+                  priority={true}
+                  src={
+                    playerData.info.avatar
+                      ? playerData?.info.avatar
+                      : "/images/noavatar.png"
+                  }
+                  alt=""
+                />
+              </div>
               <h3 className="mt-6 text-4xl font-semibold leading-7 tracking-tight text-white">
                 {playerData.info.nickname}
               </h3>
@@ -127,13 +136,13 @@ const PlayerInfo = () => {
               </div>
               {playerData.fullTimeStats?.lifetime ? (
                 <>
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
                     Matches:{" "}
                     <span className="font-light">
                       {playerData.fullTimeStats.lifetime.Matches}
                     </span>
                   </div>
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
                     Recent Results:
                     <span className="font-light">
                       {playerData.fullTimeStats.lifetime["Recent Results"]?.map(
@@ -153,20 +162,20 @@ const PlayerInfo = () => {
                       )}
                     </span>
                   </div>
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
                     Win Rate:{" "}
                     <span className="font-light">
                       {playerData.fullTimeStats.lifetime["Win Rate %"]}%
                     </span>
                   </div>
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
-                    Avg K/D Ratio:{" "}
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
+                    Avg KDR:{" "}
                     <span className="font-light">
                       {playerData.fullTimeStats.lifetime["Average K/D Ratio"]}
                     </span>
                   </div>
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
-                    Avarage HS %:{" "}
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
+                    Avg HS %:{" "}
                     <span className="font-light">
                       {playerData.fullTimeStats.lifetime["Average Headshots %"]}
                     </span>
@@ -175,7 +184,7 @@ const PlayerInfo = () => {
                     <p className="font-bold text-lg">Last 20 matches: </p>
                   </div>
 
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
                     Avg Kills :{" "}
                     <span className="font-light">
                       {playerData.latestMatches.items.reduce(
@@ -184,7 +193,7 @@ const PlayerInfo = () => {
                       ) / playerData.latestMatches.items.length}
                     </span>
                   </div>
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
                     Win Rate :{" "}
                     <span className="font-light">
                       {(playerData.latestMatches.items.filter(
@@ -195,8 +204,8 @@ const PlayerInfo = () => {
                       %
                     </span>
                   </div>
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
-                    Avarage K/D:{" "}
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
+                    Avg K/D:{" "}
                     <span className="font-light">
                       {(
                         playerData.latestMatches.items.reduce(
@@ -207,7 +216,7 @@ const PlayerInfo = () => {
                       ).toFixed(2)}
                     </span>
                   </div>
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
                     WinStreak:{" "}
                     <span className="font-light">
                       {playerData.latestMatches.items.reduce(
@@ -220,7 +229,7 @@ const PlayerInfo = () => {
                       )}
                     </span>
                   </div>
-                  <div className="border h-min w-full flex flex-col justify-center items-center text-center font-bold">
+                  <div className="flex h-20 w-24 flex-col items-center justify-center rounded-md border border-dashed border-gray-200 transition-colors duration-100 ease-in-out hover:border-gray-400/80 text-center">
                     HS %
                     <span className="font-light">
                       {playerData.latestMatches.items.reduce(
@@ -234,19 +243,12 @@ const PlayerInfo = () => {
               ) : (
                 <p>Loading...</p>
               )}
-              <div className="py-2 w-full h-[250px] flex flex-col justify-center items-center text-center font-bold col-span-5 relative">
-                <div className="mt-10 border-5 border-red-500 absolute h-full w-[336px] no-scrollbar no-scrollbar::-webkit-scrollbar">
-                  <iframe
-                    className="h-full w-full"
-                    src={`https://gamer2810.github.io/steam-miniprofile/?accountId=${playerData.info.steam_id_64}`}
-                  ></iframe>
-                </div>
-              </div>
             </li>
           </ul>
         </div>
       </div>
       <div className="relative isolate overflow-hidden  py-10 px-80">
+        {/* <div className="relative isolate overflow-hidden  py-10"> */}
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Matches
@@ -258,7 +260,8 @@ const PlayerInfo = () => {
 
         {playerData.latestMatches?.items && (
           <div className="w-full mt-12">
-            <div className="overflow-auto">
+            {/* <div className="overflow-auto"> */}
+            <div className="">
               <table className="w-full whitespace-nowrap text-left bg-gray-900 py-10 opacity-50 rounded-md transition-opacity duration-300  hover:opacity-80">
                 <colgroup>
                   <col className="w-full sm:w-4/12" />
@@ -298,6 +301,21 @@ const PlayerInfo = () => {
                       className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8"
                     >
                       Deaths ☠️
+                    </th>
+                    <th scope="col" className="relative py-2 pl-0 pr-4">
+                      K/R 📈
+                    </th>
+                    <th scope="col" className="relative py-2 pl-0 pr-4">
+                      K/D 📈
+                    </th>
+                    <th scope="col" className="relative py-2 pl-0 pr-4">
+                      HS% 🎯
+                    </th>
+                    <th scope="col" className="relative py-2 pl-0 pr-4">
+                      MAP 🗺️
+                    </th>
+                    <th scope="col" className="relative py-2 pl-0 pr-4">
+                      Date 📅
                     </th>
                   </tr>
                 </thead>
@@ -341,6 +359,23 @@ const PlayerInfo = () => {
                       </td>
                       <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-red-400 md:table-cell lg:pr-20">
                         {match.stats.Deaths}
+                      </td>
+                      <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-white md:table-cell lg:pr-20">
+                        {match.stats["K/R Ratio"]}
+                      </td>
+                      <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-white md:table-cell lg:pr-20">
+                        {match.stats["K/D Ratio"]}
+                      </td>
+                      <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-white md:table-cell lg:pr-20">
+                        {match.stats["Headshots %"]}
+                      </td>
+
+                      <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-white md:table-cell lg:pr-20">
+                        {match.stats["Map"]}
+                      </td>
+
+                      <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-white md:table-cell lg:pr-20">
+                        {countTimePostMatch(match.stats["Updated At"])}
                       </td>
                     </tr>
                   ))}
