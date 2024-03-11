@@ -8,15 +8,17 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { usePlayerData } from "./hooks/PlayerDataContext";
+import useDebounce from "./hooks/useDebounce";
 
 const Home = () => {
   const router = useRouter();
 
   const { fetchSearchForPlayers, playerData } = usePlayerData();
-  const [inputNickname, setInputNickname] = useState("shorstky");
+  const [inputNickname, setInputNickname] = useState("");
   const [isShowing, setIsShowing] = useState(false);
   const [enterPage, setEnterPage] = useState(false);
   let [, , resetIsShowing] = useTimeoutFn(() => setIsShowing(true), 50);
+  const debouncedSearch = useDebounce(inputNickname, 200);
 
   const handleInputChange = (event) => {
     setInputNickname(event.target.value);
@@ -35,6 +37,10 @@ const Home = () => {
   useEffect(() => {
     setEnterPage(true);
   }, []);
+
+  useEffect(() => {
+    if (debouncedSearch) fetchSearchForPlayers(debouncedSearch);
+  }, [debouncedSearch]);
 
   return (
     <div className="relative isolate overflow-hidden bg-gray-900">
@@ -109,35 +115,34 @@ const Home = () => {
                         leaveTo="opacity-0 scale-95"
                         key={index}
                       >
-                        <div
-                          className="bg-slate-50 opacity-10 flex align-center items-center  rounded-md px-2 cursor-pointer hover:bg-gray-200 transition-all ease-in-out duration-300 mt-2 hover:opacity-50 max-h-10"
-                          key={index}
-                          onClick={() => {
-                            router.push(`/player-info/${player.nickname}`);
-                          }}
-                        >
-                          <Image
-                            className="rounded-full p-2"
-                            width="50"
-                            height="50"
-                            src={
-                              player.avatar
-                                ? player.avatar
-                                : "https://static.thenounproject.com/png/55393-200.png"
-                            }
-                            alt={player.nickname}
-                          />
-                          <span>{player.nickname}</span>
-                          <span className="ml-1">[{player.country}]</span>
-                          <span>
-                            {player.status === "AVAILABLE" ? (
-                              <div className="bg-green-500 rounded-full w-2 h-2 mx-1"></div>
-                            ) : (
-                              <div className="bg-red-500 rounded-full w-2 h-2 mx-1"></div>
-                            )}
-                          </span>
-                          <span>{player.verified}</span>
-                        </div>
+                        <Link href={`/player-info/${player.nickname}`}>
+                          <div
+                            className="bg-slate-50 opacity-10 flex align-center items-center  rounded-md px-2 cursor-pointer hover:bg-gray-200 transition-all ease-in-out duration-300 mt-2 hover:opacity-50 max-h-10"
+                            key={index}
+                          >
+                            <Image
+                              className="rounded-full p-2"
+                              width="50"
+                              height="50"
+                              src={
+                                player.avatar
+                                  ? player.avatar
+                                  : "https://static.thenounproject.com/png/55393-200.png"
+                              }
+                              alt={player.nickname}
+                            />
+                            <span>{player.nickname}</span>
+                            <span className="ml-1">[{player.country}]</span>
+                            <span>
+                              {player.status === "AVAILABLE" ? (
+                                <div className="bg-green-500 rounded-full w-2 h-2 mx-1"></div>
+                              ) : (
+                                <div className="bg-red-500 rounded-full w-2 h-2 mx-1"></div>
+                              )}
+                            </span>
+                            <span>{player.verified}</span>
+                          </div>
+                        </Link>
                       </Transition>
                     ))}
                 </div>
